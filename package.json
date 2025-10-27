@@ -1,27 +1,20 @@
 {
   "name": "crudproj",
   "version": "1.0.0",
-  "description": "",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@fastify/swagger": "^9.5.2",
     "@fastify/swagger-ui": "^5.2.3",
     "dotenv": "^17.2.3",
     "fastify": "^5.6.1",
     "mysql2": "^3.15.3",
-    "sequelize": "^6.37.7"
-  },
-  "devDependencies": {
+    "sequelize": "^6.37.7",
     "typescript": "^5.9.3",
     "ts-node": "^10.9.2",
     "@types/node": "^24.9.1",
