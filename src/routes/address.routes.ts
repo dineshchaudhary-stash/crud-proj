@@ -4,7 +4,7 @@ import * as addressController from "../controllers/address.controllers.js";
 export default async function addressRoutes(fastify: FastifyInstance) {
   fastify.post("/addresses", addressController.createAddress);
   fastify.get("/addresses", addressController.getAllAddresses);
-  fastify.get("/addresses/user/:userId", addressController.getAddressesByUserId);
+  fastify.get("/addresses/user/:id", addressController.getAddressesByUserId);
 
   fastify.get("/addresses/:id", addressController.getAddressById);
   

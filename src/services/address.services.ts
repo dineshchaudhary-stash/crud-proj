@@ -9,8 +9,8 @@ export const getAllAddresses = async (pincode?: string) => {
 };
 
 export const getAddressById = async (id: number) => await Address.findByPk(id);
-export const getAddressesByUserId = async (userId: number) => {
-  return await Address.findAll({ where: { userId } });
+export const getAddressesByUserId = async (id: number) => {
+  return await Address.findAll({ where: { id } });
 };
 
 export const updateAddress = async (id: number, data: any) => await Address.update(data, { where: { id } });

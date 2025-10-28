@@ -81,14 +81,14 @@ export const getAddressById = async (req: FastifyRequest<{ Params: { id: string 
   }
 };
 export const getAddressesByUserId = async (
-  req: FastifyRequest<{ Params: { userId: string } }>,
+  req: FastifyRequest<{ Params: { id: string } }>,
   reply: FastifyReply
 ) => {
   try {
-    const userId = Number(req.params.userId);
-    if (isNaN(userId)) throw new ApiError("Invalid user ID", 400);
+    const id = Number(req.params.id);
+    if (isNaN(id)) throw new ApiError("Invalid user ID", 400);
 
-    const addresses = await addressService.getAddressesByUserId(userId);
+    const addresses = await addressService.getAddressesByUserId(id);
     if (!addresses || addresses.length === 0)
       throw new ApiError("No addresses found for this user", 404);
 
