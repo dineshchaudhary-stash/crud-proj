@@ -46,8 +46,9 @@ const start = async () => {
 
     // Start server correctly for Fastify v5
     const port = Number(process.env.PORT) || 5000;
-    await app.listen({ port: Number(process.env.PORT) || 5000 });
-    console.log(` Server running at http://localhost:${port}`);
+    await app.listen({ port, host: "0.0.0.0" });
+console.log(` Server running at http://0.0.0.0:${port}`);
+
   } catch (err) {
     console.error(" Error starting server:", err);
     process.exit(1);
