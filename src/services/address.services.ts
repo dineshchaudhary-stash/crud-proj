@@ -8,6 +8,12 @@ export const getAllAddresses = async (pincode?: string) => {
   if (pincode) return await Address.findAll({ where: { pincode } });
   return await Address.findAll();
 };
+  // Get addresses by pincode
+export const getAddressesByPincode = async (pincode: string) => {
+  return await Address.findAll({
+    where: { pincode },
+  });
+};
 
 export const getAddressById = async (id: number) => await Address.findByPk(id);
 export const getAddressesByUserId = async (user_id: number) => {

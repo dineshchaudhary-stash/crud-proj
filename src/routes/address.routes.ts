@@ -8,6 +8,7 @@ export default async function addressRoutes(fastify: FastifyInstance) {
 
   fastify.get("/addresses/:id", addressController.getAddressById);
   
+  fastify.get("/addresses/pincode/:pincode", addressController.getAddressesByPincode);
 
   fastify.put("/addresses/:id", addressController.updateAddress);
   fastify.delete("/addresses/:id", addressController.deleteAddress);

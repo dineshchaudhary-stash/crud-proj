@@ -97,10 +97,34 @@ export const getAddressesByUserId = async (
   }
 };
 
+export const getAddressesByPincode = async (
+  req: FastifyRequest<{ Params: { pincode: string } }>,
+  reply: FastifyReply
+) => {
+  try {
+    const { pincode } = req.params;
+
+    if (!pincode || isNaN(Number(pincode))) {
+      throw new ApiError("Invalid or missing pincode", 400);
+    }
+
+    const addresses = await addressService.getAddressesByPincode(pincode);
+
+    if (!addresses || addresses.length === 0) {
+      throw new ApiError("No addresses found for this pincode", 404);
+    }
+
+    reply.send({ success: true, data: addresses });
+  } catch (error) {
+    handleError(reply, error);
+  }
+};
+
 /**
  * PUT /addresses/:id
  * body can contain any of: { street, city, state, pincode }
  */
+
 export const updateAddress = async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
   try {
     const id = Number(req.params.id);
