@@ -85,10 +85,9 @@ export const getAddressesByUserId = async (
   reply: FastifyReply
 ) => {
   try {
-    const user_id = Number(req.params.user_id);
-    if (isNaN(user_id)) throw new ApiError("Invalid user ID", 400);
-
-    const addresses = await addressService.getAddressesByUserId(user_id);
+    const userid = Number(req.params.user_id);
+    if (isNaN(userid)) throw new ApiError("Invalid user ID", 400);
+    const addresses = await addressService.getAddressesByUserId(userid);
     if (!addresses || addresses.length === 0)
       throw new ApiError("No addresses found for this user", 404);
 

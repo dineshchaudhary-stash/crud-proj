@@ -1,4 +1,5 @@
 import { Address } from "../models/address.model.js";
+
 import { Op } from  "sequelize";
 
 export const createAddress = async (data: any) => await Address.create(data);

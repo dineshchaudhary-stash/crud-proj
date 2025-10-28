@@ -1,31 +1,4 @@
-// import { FastifyReply, FastifyRequest } from "fastify";
-// import * as userService from "../services/user.services";
 
-// export const createUser = async (req: FastifyRequest, reply: FastifyReply) => {
-//   const data = await userService.createUser(req.body);
-//   reply.code(201).send(data);
-// };
-
-// export const getAllUsers = async (req: FastifyRequest, reply: FastifyReply) => {
-//   const users = await userService.getAllUsers();
-//   reply.send(users);
-// };
-
-// export const getUserById = async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-//   const user = await userService.getUserById(+req.params.id);
-//   if (!user) return reply.code(404).send({ message: "User not found" });
-//   reply.send(user);
-// };
-
-// export const updateUser = async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-//   await userService.updateUser(+req.params.id, req.body);
-//   reply.send({ message: "User updated successfully" });
-// };
-
-// export const deleteUser = async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-//   await userService.deleteUser(+req.params.id);
-//   reply.send({ message: "User deleted successfully" });
-// };
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as userService from "../services/user.services.js";
 import {
