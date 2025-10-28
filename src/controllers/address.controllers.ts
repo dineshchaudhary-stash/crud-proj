@@ -1,33 +1,4 @@
-// import { FastifyReply, FastifyRequest } from "fastify";
-// import * as addressService from "../services/address.services";
 
-// export const createAddress = async (req: FastifyRequest, reply: FastifyReply) => {
-//   const data = await addressService.createAddress(req.body);
-//   reply.code(201).send(data);
-// };
-
-// export const getAllAddresses = async (req: FastifyRequest, reply: FastifyReply) => {
-//   const { pincode } = req.query as any;
-//   const addresses = await addressService.getAllAddresses(pincode);
-//   reply.send(addresses);
-// };
-
-// export const getAddressById = async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-//   const address = await addressService.getAddressById(+req.params.id);
-//   if (!address) return reply.code(404).send({ message: "Address not found" });
-//   reply.send(address);
-// };
-
-// export const updateAddress = async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-//   await addressService.updateAddress(+req.params.id, req.body);
-//   reply.send({ message: "Address updated successfully" });
-// };
-
-// export const deleteAddress = async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
-//   await addressService.deleteAddress(+req.params.id);
-//   reply.send({ message: "Address deleted successfully" });
-// };
-// src/controllers/address.controllers.ts
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as addressService from "../services/address.services.js";
 import { ApiError, handleError } from "../utils/errorhandler.js";
@@ -105,6 +76,23 @@ export const getAddressById = async (req: FastifyRequest<{ Params: { id: string 
     if (!address) throw new ApiError("Address not found", 404);
 
     reply.send({ success: true, data: address });
+  } catch (error) {
+    handleError(reply, error);
+  }
+};
+export const getAddressesByUserId = async (
+  req: FastifyRequest<{ Params: { userId: string } }>,
+  reply: FastifyReply
+) => {
+  try {
+    const userId = Number(req.params.userId);
+    if (isNaN(userId)) throw new ApiError("Invalid user ID", 400);
+
+    const addresses = await addressService.getAddressesByUserId(userId);
+    if (!addresses || addresses.length === 0)
+      throw new ApiError("No addresses found for this user", 404);
+
+    reply.send({ success: true, data: addresses });
   } catch (error) {
     handleError(reply, error);
   }
