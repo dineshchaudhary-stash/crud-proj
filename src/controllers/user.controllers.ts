@@ -1,55 +1,47 @@
-
 import { FastifyReply, FastifyRequest } from "fastify";
+import { ZodError } from "zod";
 import * as userService from "../services/user.services.js";
-import {
-  validateEmail,
-  validateName,
-  validateRequiredFields,
-} from "../utils/validation.js";
 import { ApiError, handleError } from "../utils/errorhandler.js";
- 
+import { createUserSchema, updateUserSchema } from "../schema/user.schema.js";
+
 /**
- *  CREATE USER
+ * CREATE USER
  * POST /users
  */
-
 export const createUser = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
-    const data: any = req.body;
+    //  Validate request using Zod
+    const parsed = createUserSchema.parse(req);
+    const data = parsed.body;
 
-    //  Check required fields
-    const missing = validateRequiredFields(data, [
-      "first_name",
-      "last_name",
-      "email",
-    ]);
-    if (missing.length > 0)
-      throw new ApiError(`Missing fields: ${missing.join(", ")}`, 400);
-
-    // Validate name and email
-    if (!validateName(data.first_name) || !validateName(data.last_name)) {
-      throw new ApiError("Names must contain only letters", 400);
-    }
-    if (!validateEmail(data.email)) {
-      throw new ApiError("Invalid email format", 400);
-    }
+    // Check if email already exists
     const existingUser = await userService.findUserByEmail(data.email);
     if (existingUser) {
       throw new ApiError("Email already exists. Please use a different one.", 400);
     }
 
-    // 3 Save user
+    // Create new user
     const newUser = await userService.createUser(data);
-    reply
-      .code(201)
-      .send({ success: true, message: "User created successfully", data: newUser });
+
+    reply.code(201).send({
+      success: true,
+      message: "User created successfully",
+      data: newUser,
+    });
   } catch (error) {
+    if (error instanceof ZodError) {
+      return reply.code(400).send({
+        success: false,
+        message: "Validation failed",
+        errors: error.issues,
+      });
+    }
     handleError(reply, error);
   }
 };
 
 /**
- *  GET ALL USERS
+ * GET ALL USERS
  * GET /users
  */
 export const getAllUsers = async (req: FastifyRequest, reply: FastifyReply) => {
@@ -70,8 +62,7 @@ export const getUserById = async (
   reply: FastifyReply
 ) => {
   try {
-    const id = +req.params.id;
-
+    const id = Number(req.params.id);
     if (isNaN(id)) throw new ApiError("Invalid user ID", 400);
 
     const user = await userService.getUserById(id);
@@ -84,36 +75,42 @@ export const getUserById = async (
 };
 
 /**
- *  UPDATE USER
+ * UPDATE USER
  * PUT /users/:id
  */
 export const updateUser = async (
-  req: FastifyRequest<{ Params: { id: string } }>,
+  req: FastifyRequest,
   reply: FastifyReply
 ) => {
   try {
-    const id = +req.params.id;
-    const data: any = req.body;
-
-    if (isNaN(id)) throw new ApiError("Invalid user ID", 400);
-
-    // Optional email validation (if provided)
-    if (data.email && !validateEmail(data.email)) {
-      throw new ApiError("Invalid email format", 400);
-    }
+    //  Validate request with Zod
+    const parsed = updateUserSchema.parse(req);
+    const id = Number(parsed.params.id);
+    const data = parsed.body;
 
     const [updated] = await userService.updateUser(id, data);
 
-    if (updated === 0) throw new ApiError("User not found or no changes made", 404);
+    if (updated === 0)
+      throw new ApiError("User not found or no changes made", 404);
 
-    reply.send({ success: true, message: "User updated successfully" });
+    reply.send({
+      success: true,
+      message: "User updated successfully",
+    });
   } catch (error) {
+    if (error instanceof ZodError) {
+      return reply.code(400).send({
+        success: false,
+        message: "Validation failed",
+        errors: error.issues,
+      });
+    }
     handleError(reply, error);
   }
 };
 
 /**
- * ✅ DELETE USER
+ * DELETE USER
  * DELETE /users/:id
  */
 export const deleteUser = async (
@@ -121,12 +118,10 @@ export const deleteUser = async (
   reply: FastifyReply
 ) => {
   try {
-    const id = +req.params.id;
-
+    const id = Number(req.params.id);
     if (isNaN(id)) throw new ApiError("Invalid user ID", 400);
 
     const deleted = await userService.deleteUser(id);
-
     if (deleted === 0) throw new ApiError("User not found", 404);
 
     reply.send({ success: true, message: "User deleted successfully" });
