@@ -52,6 +52,24 @@ export const getAllUsers = async (req: FastifyRequest, reply: FastifyReply) => {
     handleError(reply, error);
   }
 };
+export const getUsersOnly = async (req: FastifyRequest, reply: FastifyReply) => {
+  try {
+    const users = await userService.getUsersOnly();
+    reply.send({ success: true, data: users });
+  } catch (error) {
+    handleError(reply, error);
+  }
+};
+
+
+export const getUsersWithoutAddresses = async (req, reply) => {
+  try {
+    const users = await userService.getUsersWithoutAddresses();
+    reply.send({ success: true, data: users });
+  } catch (error) {
+    handleError(reply, error);
+  }
+};
 
 /**
  * GET USER BY ID

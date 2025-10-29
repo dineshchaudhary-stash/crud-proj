@@ -24,6 +24,12 @@ export default async function userRoutes(fastify: FastifyInstance) {
 
   //  Get All Users
   fastify.get("/users", userController.getAllUsers);
+  // Get Users Only (no addresses)
+  fastify.get("/users/no-addresses", userController.getUsersWithoutAddresses);
+
+  // Get Users Only (no addresses)
+  fastify.get("/users/only", userController.getUsersOnly);
+
 
   //  Get User by ID
   fastify.get("/users/:id", userController.getUserById);
