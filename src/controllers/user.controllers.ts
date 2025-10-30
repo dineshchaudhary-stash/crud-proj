@@ -142,7 +142,9 @@ export const deleteUser = async (
     const deleted = await userService.deleteUser(id);
     if (deleted === 0) throw new ApiError("User not found", 404);
 
-    reply.send({ success: true, message: "User deleted successfully" });
+    reply.send({ success: true,  data : {message: "User deleted successfully"} 
+
+    });
   } catch (error) {
     handleError(reply, error);
   }

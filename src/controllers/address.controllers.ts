@@ -187,7 +187,9 @@ export const deleteAddress = async (
     const deleted = await addressService.deleteAddress(id);
     if (deleted === 0) throw new ApiError("Address not found", 404);
 
-    reply.send({ success: true, message: "Address deleted successfully" });
+    reply.send({ success: true, data: { message: "Address deleted successfully" }
+
+    });
   } catch (error) {
     handleError(reply, error);
   }

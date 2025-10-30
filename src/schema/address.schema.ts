@@ -84,7 +84,9 @@ export const updateAddressResponseSchema = z.object({
 
 export const deleteAddressResponseSchema = z.object({
   success: z.boolean(),
+  data: z.object({
   message: z.string(),
+    }),
 });
 
 //  Types for TypeScript
