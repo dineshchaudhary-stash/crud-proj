@@ -6,6 +6,11 @@ import {
   updateAddressSchema,
   getAddressByUserSchema,
   getAddressByPincodeSchema,
+  createAddressResponseSchema,
+  getAllAddressesResponseSchema,
+  getAddressByIdResponseSchema,
+  updateAddressResponseSchema,
+  deleteAddressResponseSchema,
 } from "../schema/address.schema.js";
 
 export default async function addressRoutes(fastify: FastifyInstance) {
@@ -13,20 +18,40 @@ export default async function addressRoutes(fastify: FastifyInstance) {
   fastify.post("/addresses", {
     schema: {
       body: zodToJsonSchema(createAddressSchema.shape.body),
+      response: {
+        201: zodToJsonSchema(createAddressResponseSchema),
+      },
     },
     handler: addressController.createAddress,
   });
 
-  //  Get All Addresses (optional pincode query)
-  fastify.get("/addresses", addressController.getAllAddresses);
+  //  Get All Addresses (optional ?pincode=)
+  fastify.get("/addresses", {
+    schema: {
+      response: {
+        200: zodToJsonSchema(getAllAddressesResponseSchema),
+      },
+    },
+    handler: addressController.getAllAddresses,
+  });
 
   //  Get Address by ID
-  fastify.get("/addresses/:id", addressController.getAddressById);
+  fastify.get("/addresses/:id", {
+    schema: {
+      response: {
+        200: zodToJsonSchema(getAddressByIdResponseSchema),
+      },
+    },
+    handler: addressController.getAddressById,
+  });
 
   //  Get Addresses by User ID
   fastify.get("/addresses/user/:userId", {
     schema: {
       params: zodToJsonSchema(getAddressByUserSchema.shape.params),
+      response: {
+        200: zodToJsonSchema(getAllAddressesResponseSchema),
+      },
     },
     handler: addressController.getAddressesByUserId,
   });
@@ -35,6 +60,9 @@ export default async function addressRoutes(fastify: FastifyInstance) {
   fastify.get("/addresses?pincode=:pincode", {
     schema: {
       params: zodToJsonSchema(getAddressByPincodeSchema.shape.params),
+      response: {
+        200: zodToJsonSchema(getAllAddressesResponseSchema),
+      },
     },
     handler: addressController.getAddressesByPincode,
   });
@@ -43,10 +71,20 @@ export default async function addressRoutes(fastify: FastifyInstance) {
   fastify.put("/addresses/:id", {
     schema: {
       body: zodToJsonSchema(updateAddressSchema.shape.body),
+      response: {
+        200: zodToJsonSchema(updateAddressResponseSchema),
+      },
     },
     handler: addressController.updateAddress,
   });
 
   //  Delete Address
-  fastify.delete("/addresses/:id", addressController.deleteAddress);
+  fastify.delete("/addresses/:id", {
+    schema: {
+      response: {
+        200: zodToJsonSchema(deleteAddressResponseSchema),
+      },
+    },
+    handler: addressController.deleteAddress,
+  });
 }

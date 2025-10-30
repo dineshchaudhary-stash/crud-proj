@@ -23,7 +23,7 @@ export async function getUsersWithoutAddresses() {
 }
 
 export const getUserById = async (id: number) => await User.findByPk(id, { include: ["addresses"]  });
-// ✅ Get only users (no addresses)
+//  Get only users (no addresses)
 export async function getUsersOnly() {
   return User.findAll({
     attributes: ["id", "first_name", "last_name", "email", "createdAt", "updatedAt"],
