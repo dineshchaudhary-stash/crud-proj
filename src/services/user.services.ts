@@ -4,7 +4,12 @@ export const findUserByEmail = async (email: string) => {
   return await User.findOne({ where: { email } });
 };
 export const createUser = async (data: any) => await User.create(data);
-export const getAllUsers = async () => await User.findAll ({ include: ["addresses"]})  ; 
+export const getAllUsers = async () => await User.findAll ({ include: [
+      {
+        model: Address,
+        as: "addresses", //  Use the same alias you defined in your associations
+      },
+    ],})  ; 
 export async function getUsersWithoutAddresses() {
   // Users WITHOUT addresses
   return User.findAll({
